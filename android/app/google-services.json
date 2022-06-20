@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "258662186623",
+    "project_id": "d2ypresence",
+    "storage_bucket": "d2ypresence.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:258662186623:android:4ec7c44f40b52bbe2d494a",
+        "android_client_info": {
+          "package_name": "com.adi.d2ypresence"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "258662186623-s1ejsji014b0vmhpqgnescojuj3055fr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfggY83Uea_gVAIj4nmiW1D7lMCM72QIE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "258662186623-s1ejsji014b0vmhpqgnescojuj3055fr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
