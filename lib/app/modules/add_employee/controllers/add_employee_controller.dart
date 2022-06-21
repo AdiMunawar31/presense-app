@@ -18,7 +18,7 @@ class AddEmployeeController extends GetxController {
       try {
         final credential = await auth.createUserWithEmailAndPassword(
           email: emailController.text,
-          password: 'password123',
+          password: 'password',
         );
 
         if (credential.user != null) {
@@ -40,6 +40,7 @@ class AddEmployeeController extends GetxController {
                 nipController.clear(),
                 nameController.clear(),
                 emailController.clear(),
+                credential.user!.sendEmailVerification(),
               });
         }
       } on FirebaseAuthException catch (e) {
@@ -54,6 +55,13 @@ class AddEmployeeController extends GetxController {
           Get.snackbar(
             'Email Already in Use',
             'The account already exists for that email.',
+            backgroundColor: Colors.black38,
+            colorText: Colors.white,
+          );
+        } else {
+          Get.snackbar(
+            e.code,
+            e.message!,
             backgroundColor: Colors.black38,
             colorText: Colors.white,
           );

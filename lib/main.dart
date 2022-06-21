@@ -32,7 +32,7 @@ void main() async {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         appBarTheme: const AppBarTheme(elevation: 0),
       ),
-      initialRoute: AppPages.INITIAL,
+      initialRoute: Routes.LOGIN,
       getPages: AppPages.routes,
     ),
   );
