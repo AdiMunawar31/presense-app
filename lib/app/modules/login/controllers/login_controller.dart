@@ -19,7 +19,11 @@ class LoginController extends GetxController {
 
         if (credential.user != null) {
           if (credential.user!.emailVerified == true) {
-            Get.offAllNamed(Routes.HOME);
+            if (passwordController.text == 'password') {
+              Get.offAllNamed(Routes.NEW_PASSWORD);
+            } else {
+              Get.offAllNamed(Routes.HOME);
+            }
           } else {
             Get.defaultDialog(
               contentPadding: const EdgeInsets.only(bottom: 24.0, top: 12.0),
@@ -37,7 +41,14 @@ class LoginController extends GetxController {
                 ],
               ),
               onConfirm: () async {
-                await credential.user!.sendEmailVerification();
+                await credential.user!.sendEmailVerification().then((value) => {
+                      Get.snackbar(
+                        'Success',
+                        'Verification email sent successfully',
+                        backgroundColor: Colors.black38,
+                        colorText: Colors.white,
+                      ),
+                    });
               },
             );
           }

@@ -5,15 +5,15 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../controllers/login_controller.dart';
+import '../controllers/new_password_controller.dart';
 
-class LoginView extends GetView<LoginController> {
-  const LoginView({Key? key}) : super(key: key);
+class NewPasswordView extends GetView<NewPasswordController> {
+  const NewPasswordView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('LOGIN'),
+        title: const Text('NEW PASSWORD'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -27,19 +27,15 @@ class LoginView extends GetView<LoginController> {
                   'assets/images/logo.png',
                   width: 160,
                 ),
-                const Text(
-                  'Please login to continue using our app',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    'Please change your password to secure your account!',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
                 const SizedBox(height: 60),
-                inputItem(
-                  context,
-                  'Email',
-                  controller.emailController,
-                  false,
-                  const Icon(CupertinoIcons.at_circle),
-                ),
-                const SizedBox(height: 20),
                 inputItem(
                   context,
                   'Password',
@@ -48,8 +44,8 @@ class LoginView extends GetView<LoginController> {
                   const Icon(CupertinoIcons.lock_circle),
                 ),
                 const SizedBox(height: 20),
-                colorButton(context, 'LOGIN', () {
-                  controller.login();
+                colorButton(context, 'NEW PASSWORD', () {
+                  controller.newPassword();
                 }),
               ],
             ),
