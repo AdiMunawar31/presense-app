@@ -18,37 +18,55 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Column(
-            children: [
-              inputItem(
-                context,
-                'NIP',
-                controller.nipController,
-                false,
-                const Icon(CupertinoIcons.grid_circle),
-              ),
-              const SizedBox(height: 20),
-              inputItem(
-                context,
-                'Name',
-                controller.nameController,
-                false,
-                const Icon(CupertinoIcons.person_circle),
-              ),
-              const SizedBox(height: 20),
-              inputItem(
-                context,
-                'Email',
-                controller.emailController,
-                false,
-                const Icon(CupertinoIcons.at_circle),
-              ),
-              const SizedBox(height: 20),
-              colorButton(context, 'Create', () {
-                controller.addEmployee(context);
-              }),
-            ],
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: [
+                const SizedBox(height: 30),
+                Image.asset(
+                  'assets/images/add_employee.png',
+                  width: 200,
+                ),
+                const Text(
+                  'Only admin can add new employees',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+                const SizedBox(height: 40),
+                inputItem(
+                  context,
+                  'NIP',
+                  controller.nipController,
+                  false,
+                  const Icon(CupertinoIcons.grid_circle),
+                ),
+                const SizedBox(height: 20),
+                inputItem(
+                  context,
+                  'Name',
+                  controller.nameController,
+                  false,
+                  const Icon(CupertinoIcons.person_circle),
+                ),
+                const SizedBox(height: 20),
+                inputItem(
+                  context,
+                  'Email',
+                  controller.emailController,
+                  false,
+                  const Icon(CupertinoIcons.at_circle),
+                ),
+                const SizedBox(height: 20),
+                Obx(
+                  () => colorButton(context,
+                      controller.isLoading.isFalse ? 'CREATE' : 'LOADING...',
+                      () async {
+                    if (controller.isLoading.isFalse) {
+                      await controller.addEmployee(context);
+                    }
+                  }),
+                ),
+              ],
+            ),
           ),
         ),
       ),

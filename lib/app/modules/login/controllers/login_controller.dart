@@ -7,10 +7,13 @@ class LoginController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  RxBool isLoading = false.obs;
+
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  void login() async {
+  Future<void> login() async {
     if (passwordController.text.isNotEmpty && emailController.text.isNotEmpty) {
+      isLoading.value = true;
       try {
         UserCredential credential = await auth.signInWithEmailAndPassword(
           email: emailController.text,
@@ -19,6 +22,7 @@ class LoginController extends GetxController {
 
         if (credential.user != null) {
           if (credential.user!.emailVerified == true) {
+            isLoading.value = false;
             if (passwordController.text == 'password') {
               Get.offAllNamed(Routes.NEW_PASSWORD);
             } else {
@@ -26,34 +30,43 @@ class LoginController extends GetxController {
             }
           } else {
             Get.defaultDialog(
-              contentPadding: const EdgeInsets.only(bottom: 24.0, top: 12.0),
-              titlePadding: const EdgeInsets.only(top: 24.0),
-              title: 'Not verified email',
-              buttonColor: Colors.blue,
-              textConfirm: "Send Email",
-              textCancel: "Back",
-              confirmTextColor: Colors.white,
-              content: Column(
-                children: const [
-                  Text("Please verify your email first"),
-                  SizedBox(height: 12),
-                  Text("or Send Email again?"),
-                ],
-              ),
-              onConfirm: () async {
-                await credential.user!.sendEmailVerification().then((value) => {
-                      Get.snackbar(
-                        'Success',
-                        'Verification email sent successfully',
-                        backgroundColor: Colors.black38,
-                        colorText: Colors.white,
-                      ),
-                    });
-              },
-            );
+                contentPadding: const EdgeInsets.only(bottom: 24.0, top: 12.0),
+                titlePadding: const EdgeInsets.only(top: 24.0),
+                title: 'Not verified email',
+                content: Column(
+                  children: const [
+                    Text("Please verify your email first"),
+                    SizedBox(height: 12),
+                    Text("or Send Email again?"),
+                  ],
+                ),
+                actions: [
+                  OutlinedButton(
+                      onPressed: () {
+                        isLoading.value = false;
+                        Get.back();
+                      },
+                      child: const Text('CANCEL')),
+                  ElevatedButton(
+                      onPressed: () async {
+                        await credential.user!
+                            .sendEmailVerification()
+                            .then((value) => {
+                                  Get.snackbar(
+                                    'Success',
+                                    'Verification email sent successfully',
+                                    backgroundColor: Colors.black38,
+                                    colorText: Colors.white,
+                                  ),
+                                });
+                        isLoading.value = false;
+                      },
+                      child: const Text('SEND EMAIL')),
+                ]);
           }
         }
       } on FirebaseAuthException catch (e) {
+        isLoading.value = false;
         if (e.code == 'user-not-found') {
           Get.snackbar(
             'Not Found',
@@ -77,6 +90,7 @@ class LoginController extends GetxController {
           );
         }
       } catch (e) {
+        isLoading.value = false;
         Get.snackbar(
           '500',
           'Internal Server Error',

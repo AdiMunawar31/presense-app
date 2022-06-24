@@ -1,6 +1,4 @@
 import 'package:d2ypresence/app/routes/app_pages.dart';
-import 'package:d2ypresence/app/widgets/color_button.dart';
-import 'package:d2ypresence/app/widgets/input_item.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,9 +27,9 @@ class HomeView extends GetView<HomeController> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'HomeView is working',
-              style: TextStyle(fontSize: 20),
+            Text(
+              FirebaseAuth.instance.currentUser!.email!,
+              style: const TextStyle(fontSize: 20),
             ),
             ElevatedButton(
                 onPressed: () async {

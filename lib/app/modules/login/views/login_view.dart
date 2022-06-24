@@ -48,9 +48,15 @@ class LoginView extends GetView<LoginController> {
                   const Icon(CupertinoIcons.lock_circle),
                 ),
                 const SizedBox(height: 20),
-                colorButton(context, 'LOGIN', () {
-                  controller.login();
-                }),
+                Obx(
+                  () => colorButton(context,
+                      controller.isLoading.isFalse ? 'LOGIN' : 'LOADING...',
+                      () async {
+                    if (controller.isLoading.isFalse) {
+                      await controller.login();
+                    }
+                  }),
+                ),
               ],
             ),
           ),

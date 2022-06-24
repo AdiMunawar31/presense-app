@@ -11,11 +11,15 @@ class AddEmployeeController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passAdminController = TextEditingController();
 
+  RxBool isLoading = false.obs;
+  RxBool isLoadingValidate = false.obs;
+
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Future<void> processAddEmployee() async {
     if (passAdminController.text.isNotEmpty) {
+      isLoadingValidate.value = true;
       try {
         String emailAdmin = auth.currentUser!.email!;
 
@@ -36,11 +40,11 @@ class AddEmployeeController extends GetxController {
             'email': emailController.text,
             'uid': uid,
             'createdAt': DateTime.now().toIso8601String(),
-          }).then((value) => {
-                nipController.clear(),
-                nameController.clear(),
-                emailController.clear(),
+          }).then((res) => {
                 credential.user!.sendEmailVerification(),
+                auth.signOut(),
+                auth.signInWithEmailAndPassword(
+                    email: emailAdmin, password: passAdminController.text),
                 Get.back(),
                 Get.back(),
                 Get.snackbar(
@@ -50,13 +54,9 @@ class AddEmployeeController extends GetxController {
                   colorText: Colors.white,
                 ),
               });
-
-          await auth.signOut();
-
-          await auth.signInWithEmailAndPassword(
-              email: emailAdmin, password: passAdminController.text);
         }
       } on FirebaseAuthException catch (e) {
+        isLoadingValidate.value = false;
         if (e.code == 'weak-password') {
           Get.snackbar(
             'Weak Password',
@@ -80,6 +80,7 @@ class AddEmployeeController extends GetxController {
           );
         }
       } catch (e) {
+        isLoadingValidate.value = false;
         Get.snackbar(
           '500',
           'Internal Server Error',
@@ -97,19 +98,16 @@ class AddEmployeeController extends GetxController {
     }
   }
 
-  void addEmployee(BuildContext context) async {
+  Future<void> addEmployee(BuildContext context) async {
     if (nipController.text.isNotEmpty &&
         nameController.text.isNotEmpty &&
         emailController.text.isNotEmpty) {
+      isLoading.value = true;
       /* Validation Admin */
-
       Get.defaultDialog(
           contentPadding: const EdgeInsets.only(bottom: 24.0, top: 12.0),
           titlePadding: const EdgeInsets.only(top: 24.0),
           title: 'Validation Admin',
-          // textConfirm: "Validate",
-          // textCancel: "Back",
-          confirmTextColor: Colors.white,
           content: Column(
             children: [
               const Text("Please enter admin password :"),
@@ -121,18 +119,26 @@ class AddEmployeeController extends GetxController {
               ),
             ],
           ),
-          // onConfirm: () async {},
           actions: [
             OutlinedButton(
                 onPressed: () {
+                  isLoading.value = false;
                   Get.back();
                 },
-                child: const Text('Cancel')),
-            ElevatedButton(
-                onPressed: () async {
-                  await processAddEmployee();
-                },
-                child: const Text('Validate')),
+                child: const Text('CANCEL')),
+            Obx(
+              () => ElevatedButton(
+                  onPressed: () async {
+                    if (isLoadingValidate.isFalse) {
+                      await processAddEmployee();
+                    }
+
+                    isLoading.value = false;
+                  },
+                  child: Text(
+                    isLoadingValidate.isFalse ? 'VALIDATE' : 'LOADING...',
+                  )),
+            ),
           ]);
     } else {
       Get.snackbar(

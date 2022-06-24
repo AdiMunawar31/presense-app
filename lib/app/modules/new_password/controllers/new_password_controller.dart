@@ -6,10 +6,13 @@ import 'package:get/get.dart';
 class NewPasswordController extends GetxController {
   final TextEditingController passwordController = TextEditingController();
 
+  RxBool isLoading = false.obs;
+
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  void newPassword() async {
+  Future<void> newPassword() async {
     if (passwordController.text.isNotEmpty) {
+      isLoading.value = true;
       try {
         if (passwordController.text != 'password') {
           String email = auth.currentUser!.email!;
@@ -28,9 +31,10 @@ class NewPasswordController extends GetxController {
                       'Password successfully changed',
                       backgroundColor: Colors.black38,
                       colorText: Colors.white,
-                    )
+                    ),
                   });
         } else {
+          isLoading.value = false;
           Get.snackbar(
             'Password must be new',
             'The password cannot be the same as the default',
@@ -39,6 +43,7 @@ class NewPasswordController extends GetxController {
           );
         }
       } on FirebaseAuthException catch (e) {
+        isLoading.value = false;
         if (e.code == 'weak-password') {
           Get.snackbar(
             'Weak Password',
@@ -63,6 +68,7 @@ class NewPasswordController extends GetxController {
         );
       }
     } else {
+      isLoading.value = false;
       Get.snackbar(
         'Password is required',
         'Password inputs must be filled in',

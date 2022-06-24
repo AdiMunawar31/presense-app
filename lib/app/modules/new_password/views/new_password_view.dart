@@ -44,9 +44,17 @@ class NewPasswordView extends GetView<NewPasswordController> {
                   const Icon(CupertinoIcons.lock_circle),
                 ),
                 const SizedBox(height: 20),
-                colorButton(context, 'NEW PASSWORD', () {
-                  controller.newPassword();
-                }),
+                Obx(
+                  () => colorButton(
+                      context,
+                      controller.isLoading.isFalse
+                          ? 'NEW PASSWORD'
+                          : 'LOADING...', () async {
+                    if (controller.isLoading.isFalse) {
+                      await controller.newPassword();
+                    }
+                  }),
+                ),
               ],
             ),
           ),
