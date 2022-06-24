@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:d2ypresence/app/widgets/input_item.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -7,16 +9,20 @@ class AddEmployeeController extends GetxController {
   final TextEditingController nipController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController passAdminController = TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  void addEmployee() async {
-    if (nipController.text.isNotEmpty &&
-        nameController.text.isNotEmpty &&
-        emailController.text.isNotEmpty) {
+  Future<void> processAddEmployee() async {
+    if (passAdminController.text.isNotEmpty) {
       try {
-        final credential = await auth.createUserWithEmailAndPassword(
+        String emailAdmin = auth.currentUser!.email!;
+
+        await auth.signInWithEmailAndPassword(
+            email: emailAdmin, password: passAdminController.text);
+
+        UserCredential credential = await auth.createUserWithEmailAndPassword(
           email: emailController.text,
           password: 'password',
         );
@@ -31,17 +37,24 @@ class AddEmployeeController extends GetxController {
             'uid': uid,
             'createdAt': DateTime.now().toIso8601String(),
           }).then((value) => {
+                nipController.clear(),
+                nameController.clear(),
+                emailController.clear(),
+                credential.user!.sendEmailVerification(),
+                Get.back(),
+                Get.back(),
                 Get.snackbar(
                   'Success',
                   'Employee added successfully',
                   backgroundColor: Colors.black38,
                   colorText: Colors.white,
                 ),
-                nipController.clear(),
-                nameController.clear(),
-                emailController.clear(),
-                credential.user!.sendEmailVerification(),
               });
+
+          await auth.signOut();
+
+          await auth.signInWithEmailAndPassword(
+              email: emailAdmin, password: passAdminController.text);
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
@@ -74,6 +87,53 @@ class AddEmployeeController extends GetxController {
           colorText: Colors.white,
         );
       }
+    } else {
+      Get.snackbar(
+        'Password Admin is Required',
+        'Please enter the admin password for validation needs',
+        backgroundColor: Colors.black38,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  void addEmployee(BuildContext context) async {
+    if (nipController.text.isNotEmpty &&
+        nameController.text.isNotEmpty &&
+        emailController.text.isNotEmpty) {
+      /* Validation Admin */
+
+      Get.defaultDialog(
+          contentPadding: const EdgeInsets.only(bottom: 24.0, top: 12.0),
+          titlePadding: const EdgeInsets.only(top: 24.0),
+          title: 'Validation Admin',
+          // textConfirm: "Validate",
+          // textCancel: "Back",
+          confirmTextColor: Colors.white,
+          content: Column(
+            children: [
+              const Text("Please enter admin password :"),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: inputItem(context, 'Password', passAdminController, true,
+                    const Icon(CupertinoIcons.lock_circle)),
+              ),
+            ],
+          ),
+          // onConfirm: () async {},
+          actions: [
+            OutlinedButton(
+                onPressed: () {
+                  Get.back();
+                },
+                child: const Text('Cancel')),
+            ElevatedButton(
+                onPressed: () async {
+                  await processAddEmployee();
+                },
+                child: const Text('Validate')),
+          ]);
     } else {
       Get.snackbar(
         'There is an error',

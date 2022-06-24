@@ -46,7 +46,7 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
               ),
               const SizedBox(height: 20),
               colorButton(context, 'Create', () {
-                controller.addEmployee();
+                controller.addEmployee(context);
               }),
             ],
           ),
