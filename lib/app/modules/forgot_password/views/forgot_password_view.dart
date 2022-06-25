@@ -1,4 +1,3 @@
-import 'package:d2ypresence/app/routes/app_pages.dart';
 import 'package:d2ypresence/app/widgets/color_button.dart';
 import 'package:d2ypresence/app/widgets/input_item.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,15 +5,15 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../controllers/login_controller.dart';
+import '../controllers/forgot_password_controller.dart';
 
-class LoginView extends GetView<LoginController> {
-  const LoginView({Key? key}) : super(key: key);
+class ForgotPasswordView extends GetView<ForgotPasswordController> {
+  const ForgotPasswordView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('LOGIN'),
+        title: const Text('FORGOT PASSWORD'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -28,9 +27,14 @@ class LoginView extends GetView<LoginController> {
                   'assets/images/logo.png',
                   width: 160,
                 ),
-                const Text(
-                  'Please login to continue using our app',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                const SizedBox(height: 8.0),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    "Don't Worry! it happens. Please enter the address associated with your account.",
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
                 const SizedBox(height: 60),
                 inputItem(
@@ -41,31 +45,17 @@ class LoginView extends GetView<LoginController> {
                   const Icon(CupertinoIcons.at_circle),
                 ),
                 const SizedBox(height: 20),
-                inputItem(
-                  context,
-                  'Password',
-                  controller.passwordController,
-                  true,
-                  const Icon(CupertinoIcons.lock_circle),
-                ),
-                const SizedBox(height: 20),
                 Obx(
-                  () => colorButton(context,
-                      controller.isLoading.isFalse ? 'LOGIN' : 'LOADING...',
-                      () async {
+                  () => colorButton(
+                      context,
+                      controller.isLoading.isFalse
+                          ? 'SEND EMAIL'
+                          : 'LOADING...', () async {
                     if (controller.isLoading.isFalse) {
-                      await controller.login();
+                      await controller.forgotPassword();
                     }
                   }),
                 ),
-                const SizedBox(height: 8),
-                TextButton(
-                    onPressed: () {
-                      Get.toNamed(Routes.FORGOT_PASSWORD);
-                    },
-                    child: const Text(
-                      'Forgot Password?',
-                    )),
               ],
             ),
           ),
