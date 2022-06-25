@@ -146,7 +146,10 @@ class ProfileView extends GetView<ProfileController> {
                           Icons.person,
                           'Edit Profile',
                           Icons.keyboard_arrow_right_rounded,
-                          () => Get.toNamed(Routes.EDIT_PROFILE),
+                          () => Get.toNamed(
+                            Routes.EDIT_PROFILE,
+                            arguments: user,
+                          ),
                         ),
 
                         /* Change Password */
