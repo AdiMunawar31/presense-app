@@ -48,7 +48,18 @@ class LoginView extends GetView<LoginController> {
                   true,
                   const Icon(CupertinoIcons.lock_circle),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 4),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                      onPressed: () {
+                        Get.toNamed(Routes.FORGOT_PASSWORD);
+                      },
+                      child: const Text(
+                        'Forgot Password?',
+                      )),
+                ),
+                const SizedBox(height: 4),
                 Obx(
                   () => colorButton(context,
                       controller.isLoading.isFalse ? 'LOGIN' : 'LOADING...',
@@ -58,14 +69,6 @@ class LoginView extends GetView<LoginController> {
                     }
                   }),
                 ),
-                const SizedBox(height: 8),
-                TextButton(
-                    onPressed: () {
-                      Get.toNamed(Routes.FORGOT_PASSWORD);
-                    },
-                    child: const Text(
-                      'Forgot Password?',
-                    )),
               ],
             ),
           ),

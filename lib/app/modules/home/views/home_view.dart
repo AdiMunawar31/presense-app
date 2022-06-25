@@ -18,9 +18,9 @@ class HomeView extends GetView<HomeController> {
         actions: [
           IconButton(
               onPressed: () {
-                Get.toNamed(Routes.ADD_EMPLOYEE);
+                Get.toNamed(Routes.PROFILE);
               },
-              icon: const Icon(CupertinoIcons.person_crop_circle_badge_plus)),
+              icon: const Icon(CupertinoIcons.person_crop_square_fill)),
         ],
       ),
       body: Center(
@@ -31,12 +31,6 @@ class HomeView extends GetView<HomeController> {
               FirebaseAuth.instance.currentUser!.email!,
               style: const TextStyle(fontSize: 20),
             ),
-            ElevatedButton(
-                onPressed: () async {
-                  await FirebaseAuth.instance.signOut();
-                  Get.offAllNamed(Routes.LOGIN);
-                },
-                child: const Text('LOGOUT'))
           ],
         ),
       ),

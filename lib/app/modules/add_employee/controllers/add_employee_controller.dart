@@ -39,6 +39,7 @@ class AddEmployeeController extends GetxController {
             'name': nameController.text,
             'email': emailController.text,
             'uid': uid,
+            'role': 'user',
             'createdAt': DateTime.now().toIso8601String(),
           }).then((res) => {
                 credential.user!.sendEmailVerification(),
