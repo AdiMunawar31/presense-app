@@ -1,4 +1,5 @@
 import 'package:d2ypresence/app/common/styles.dart';
+import 'package:d2ypresence/app/controllers/page_index_controller.dart';
 import 'package:d2ypresence/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -19,6 +20,8 @@ void main() async {
     statusBarColor: primaryColor,
     systemNavigationBarColor: primaryColor,
   ));
+
+  Get.put(PageIndexController(), permanent: true);
 
   runApp(
     StreamBuilder<User?>(
