@@ -4,6 +4,8 @@ import '../modules/add_employee/bindings/add_employee_binding.dart';
 import '../modules/add_employee/views/add_employee_view.dart';
 import '../modules/change_password/bindings/change_password_binding.dart';
 import '../modules/change_password/views/change_password_view.dart';
+import '../modules/detail_presence/bindings/detail_presence_binding.dart';
+import '../modules/detail_presence/views/detail_presence_view.dart';
 import '../modules/edit_profile/bindings/edit_profile_binding.dart';
 import '../modules/edit_profile/views/edit_profile_view.dart';
 import '../modules/email_sent/bindings/email_sent_binding.dart';
@@ -73,6 +75,11 @@ class AppPages {
       name: _Paths.CHANGE_PASSWORD,
       page: () => const ChangePasswordView(),
       binding: ChangePasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_PRESENCE,
+      page: () => const DetailPresenceView(),
+      binding: DetailPresenceBinding(),
     ),
   ];
 }

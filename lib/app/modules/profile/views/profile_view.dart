@@ -163,7 +163,7 @@ class ProfileView extends GetView<ProfileController> {
 
                               /* Edit Profile */
                               profileItem(
-                                Icons.person,
+                                CupertinoIcons.create,
                                 'Edit Profile',
                                 Icons.keyboard_arrow_right_rounded,
                                 () => Get.toNamed(

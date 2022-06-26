@@ -22,10 +22,10 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
           child: Center(
             child: Column(
               children: [
-                const SizedBox(height: 30),
+                const SizedBox(height: 10),
                 Image.asset(
-                  'assets/images/add_employee.png',
-                  width: 200,
+                  'assets/images/add.png',
+                  width: 250,
                 ),
                 const Text(
                   'Only admin can add new employees',
@@ -38,6 +38,14 @@ class AddEmployeeView extends GetView<AddEmployeeController> {
                   controller.nipController,
                   false,
                   const Icon(CupertinoIcons.grid_circle),
+                ),
+                const SizedBox(height: 20),
+                inputItem(
+                  context,
+                  'Job',
+                  controller.jobController,
+                  false,
+                  const Icon(CupertinoIcons.doc_circle),
                 ),
                 const SizedBox(height: 20),
                 inputItem(

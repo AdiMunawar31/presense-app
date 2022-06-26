@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 class AddEmployeeController extends GetxController {
   final TextEditingController nipController = TextEditingController();
+  final TextEditingController jobController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passAdminController = TextEditingController();
@@ -36,6 +37,7 @@ class AddEmployeeController extends GetxController {
 
           await firestore.collection('employee').doc(uid).set({
             'nip': nipController.text,
+            'job': jobController.text,
             'name': nameController.text,
             'email': emailController.text,
             'uid': uid,
@@ -101,6 +103,7 @@ class AddEmployeeController extends GetxController {
 
   Future<void> addEmployee(BuildContext context) async {
     if (nipController.text.isNotEmpty &&
+        jobController.text.isNotEmpty &&
         nameController.text.isNotEmpty &&
         emailController.text.isNotEmpty) {
       isLoading.value = true;
