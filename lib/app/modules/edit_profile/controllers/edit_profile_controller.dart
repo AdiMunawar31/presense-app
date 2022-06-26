@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class EditProfileController extends GetxController {
   final TextEditingController nipController = TextEditingController();
@@ -12,6 +15,8 @@ class EditProfileController extends GetxController {
   RxBool isLoading = false.obs;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseStorage storage = FirebaseStorage.instance;
+
   final ImagePicker _picker = ImagePicker();
 
   XFile? image;
@@ -33,16 +38,34 @@ class EditProfileController extends GetxController {
         emailController.text.isNotEmpty) {
       isLoading.value = true;
       try {
-        await firestore.collection('employee').doc(uid).update({
+        Map<String, dynamic> data = {
           'name': nameController.text,
-        }).then((value) => {
-              Get.snackbar(
-                'Success',
-                'Your profile edited successfully',
-                backgroundColor: Colors.black38,
-                colorText: Colors.white,
-              ),
-            });
+        };
+        if (image != null) {
+          File file = File(image!.path);
+          // Extentions File
+          String ext = image!.name.split('.').last;
+
+          await storage.ref('$uid/avatar.$ext').putFile(file);
+          String avatar =
+              await storage.ref('$uid/avatar.$ext').getDownloadURL();
+
+          data.addAll({'profilePic': avatar});
+        }
+
+        await firestore
+            .collection('employee')
+            .doc(uid)
+            .update(data)
+            .then((value) => {
+                  Get.snackbar(
+                    'Success',
+                    'Your profile edited successfully',
+                    backgroundColor: Colors.black38,
+                    colorText: Colors.white,
+                  ),
+                  image = null,
+                });
       } on FirebaseAuthException catch (e) {
         Get.snackbar(
           e.code,

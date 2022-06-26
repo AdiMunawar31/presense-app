@@ -72,16 +72,28 @@ class ProfileView extends GetView<ProfileController> {
                                   ],
                                 ),
                               ),
-                              ClipOval(
-                                child: SizedBox(
-                                  width: 100,
-                                  height: 100,
+                              Container(
+                                width: 120,
+                                height: 120,
+                                padding: const EdgeInsets.all(4.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(60),
+                                  border: Border.all(
+                                    width: 3,
+                                    color: blue100,
+                                    style: BorderStyle.solid,
+                                  ),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(60),
                                   child: Image.network(
                                     (user['profilePic'] != null &&
                                             user['profilePic'] != '')
                                         ? user['profilePic']
                                         : defaultProfilePic,
                                     fit: BoxFit.cover,
+                                    width: 120,
+                                    height: 120,
                                   ),
                                 ),
                               ),
