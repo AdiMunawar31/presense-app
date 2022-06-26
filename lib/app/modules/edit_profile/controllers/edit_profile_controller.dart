@@ -46,6 +46,7 @@ class EditProfileController extends GetxController {
         isLoading.value = false;
       }
     } else {
+      isLoading.value = false;
       Get.snackbar(
         'Name is required',
         'Name inputs must be filled in',

@@ -86,7 +86,7 @@ class EditProfileView extends GetView<EditProfileController> {
                     child: Text(
                       "* nip can't be changed",
                       style: TextStyle(
-                          color: Colors.red, fontStyle: FontStyle.italic),
+                          color: Colors.grey, fontStyle: FontStyle.italic),
                     ),
                   ),
                 ),
@@ -133,7 +133,7 @@ class EditProfileView extends GetView<EditProfileController> {
                     child: Text(
                       "* email can't be changed",
                       style: TextStyle(
-                          color: Colors.red, fontStyle: FontStyle.italic),
+                          color: Colors.grey, fontStyle: FontStyle.italic),
                     ),
                   ),
                 ),
@@ -148,7 +148,7 @@ class EditProfileView extends GetView<EditProfileController> {
                   false,
                   const Icon(CupertinoIcons.person_circle),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 35),
                 Obx(
                   () => colorButton(context,
                       controller.isLoading.isFalse ? 'UPDATE' : 'LOADING...',
