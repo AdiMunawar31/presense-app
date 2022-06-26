@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:d2ypresence/app/common/styles.dart';
 import 'package:d2ypresence/app/widgets/color_button.dart';
 import 'package:d2ypresence/app/widgets/input_item.dart';
@@ -19,6 +21,9 @@ class EditProfileView extends GetView<EditProfileController> {
     controller.emailController.text = user['email'];
     controller.nameController.text = user['name'];
 
+    String defaultProfilePic =
+        'https://ui-avatars.com/api/?name=${user["name"]}&background=27A8FD&color=fff&bold=true';
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('EDIT PROFILE'),
@@ -30,20 +35,48 @@ class EditProfileView extends GetView<EditProfileController> {
           child: Center(
             child: Column(
               children: [
-                const SizedBox(height: 10),
-                Image.asset(
-                  'assets/images/edit.png',
-                  width: 260,
+                const SizedBox(height: 20),
+                GetBuilder<EditProfileController>(
+                  builder: (c) {
+                    if (c.image != null) {
+                      return ClipOval(
+                        child: SizedBox(
+                          width: 130,
+                          height: 130,
+                          child: Image.file(
+                            File(c.image!.path),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return ClipOval(
+                        child: SizedBox(
+                          width: 130,
+                          height: 130,
+                          child: Image.network(
+                            (user['profilePic'] != null &&
+                                    user['profilePic'] != '')
+                                ? user['profilePic']
+                                : defaultProfilePic,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    }
+                  },
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Text(
-                    'Sorry for the nip field and email just read only',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                const SizedBox(height: 40),
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: TextButton(
+                        onPressed: () {
+                          controller.pickImage();
+                        },
+                        child: const Text(
+                          'Change profile photo',
+                          style: TextStyle(fontSize: 17),
+                        ))),
+                const SizedBox(height: 30),
 
                 /* NIP */
 

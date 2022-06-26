@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfileController extends GetxController {
   final TextEditingController nipController = TextEditingController();
@@ -11,6 +12,20 @@ class EditProfileController extends GetxController {
   RxBool isLoading = false.obs;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final ImagePicker _picker = ImagePicker();
+
+  XFile? image;
+
+  void pickImage() async {
+    image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      print(image!.path);
+      print(image!.name.split('.').last);
+    } else {
+      print('Image: $image');
+    }
+    update();
+  }
 
   Future<void> editProfile(String uid) async {
     if (nipController.text.isNotEmpty &&

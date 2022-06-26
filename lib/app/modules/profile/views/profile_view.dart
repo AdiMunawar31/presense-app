@@ -17,10 +17,6 @@ class ProfileView extends GetView<ProfileController> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('PROFILE'),
-      //   centerTitle: true,
-      // ),
       body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
           stream: controller.streamUser(),
           builder: (context, snapshot) {
@@ -31,6 +27,8 @@ class ProfileView extends GetView<ProfileController> {
             }
             if (snapshot.hasData) {
               Map<String, dynamic> user = snapshot.data!.data()!;
+              String defaultProfilePic =
+                  'https://ui-avatars.com/api/?name=${user["name"]}&background=27A8FD&color=fff&bold=true';
               return SafeArea(
                 child: SingleChildScrollView(
                   child: Center(
@@ -79,7 +77,10 @@ class ProfileView extends GetView<ProfileController> {
                                   width: 100,
                                   height: 100,
                                   child: Image.network(
-                                    'https://ui-avatars.com/api/?name=${user["name"]}&background=27A8FD&color=fff&bold=true',
+                                    (user['profilePic'] != null &&
+                                            user['profilePic'] != '')
+                                        ? user['profilePic']
+                                        : defaultProfilePic,
                                     fit: BoxFit.cover,
                                   ),
                                 ),
