@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:d2ypresence/app/common/styles.dart';
 import 'package:d2ypresence/app/controllers/page_index_controller.dart';
+import 'package:d2ypresence/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -259,11 +260,9 @@ class HomeView extends GetView<HomeController> {
                                 itemCount: 5,
                                 itemBuilder: (context, index) {
                                   return Container(
-                                    padding: const EdgeInsets.all(20.0),
-                                    margin: const EdgeInsets.only(bottom: 20.0),
+                                    padding:
+                                        const EdgeInsets.only(bottom: 20.0),
                                     decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(16),
                                       boxShadow: [
                                         BoxShadow(
                                           color: const Color(0xFF7090B0)
@@ -273,49 +272,63 @@ class HomeView extends GetView<HomeController> {
                                         )
                                       ],
                                     ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const Text(
-                                              'Enter the office',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
+                                    child: Material(
+                                      borderRadius: BorderRadius.circular(16),
+                                      color: Colors.white,
+                                      child: InkWell(
+                                        onTap: () =>
+                                            Get.toNamed(Routes.DETAIL_PRESENCE),
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(20.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  const Text(
+                                                    'Enter the office',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    DateFormat.yMMMEd().format(
+                                                      DateTime.now(),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ),
-                                            Text(
-                                              DateFormat.yMMMEd().format(
-                                                DateTime.now(),
+                                              const SizedBox(height: 2.0),
+                                              Text(
+                                                DateFormat.jms().format(
+                                                  DateTime.now(),
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 2.0),
-                                        Text(
-                                          DateFormat.jms().format(
-                                            DateTime.now(),
+                                              const SizedBox(height: 12.0),
+                                              const Text(
+                                                'Out of office',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 2.0),
+                                              Text(
+                                                DateFormat.jms().format(
+                                                  DateTime.now(),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        const SizedBox(height: 12.0),
-                                        const Text(
-                                          'Out of office',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 2.0),
-                                        Text(
-                                          DateFormat.jms().format(
-                                            DateTime.now(),
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   );
                                 },
