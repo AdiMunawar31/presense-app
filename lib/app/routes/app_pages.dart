@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/add_employee/bindings/add_employee_binding.dart';
 import '../modules/add_employee/views/add_employee_view.dart';
+import '../modules/all_presence/bindings/all_presence_binding.dart';
+import '../modules/all_presence/views/all_presence_view.dart';
 import '../modules/change_password/bindings/change_password_binding.dart';
 import '../modules/change_password/views/change_password_view.dart';
 import '../modules/detail_presence/bindings/detail_presence_binding.dart';
@@ -80,6 +82,11 @@ class AppPages {
       name: _Paths.DETAIL_PRESENCE,
       page: () => const DetailPresenceView(),
       binding: DetailPresenceBinding(),
+    ),
+    GetPage(
+      name: _Paths.ALL_PRESENCE,
+      page: () => const AllPresenceView(),
+      binding: AllPresenceBinding(),
     ),
   ];
 }

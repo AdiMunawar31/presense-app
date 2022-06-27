@@ -239,7 +239,8 @@ class HomeView extends GetView<HomeController> {
                                       ),
                                     ),
                                     TextButton(
-                                      onPressed: () {},
+                                      onPressed: () =>
+                                          Get.toNamed(Routes.ALL_PRESENCE),
                                       child: const Text(
                                         'See More',
                                         style: TextStyle(
@@ -260,8 +261,7 @@ class HomeView extends GetView<HomeController> {
                                 itemCount: 5,
                                 itemBuilder: (context, index) {
                                   return Container(
-                                    padding:
-                                        const EdgeInsets.only(bottom: 20.0),
+                                    margin: const EdgeInsets.only(bottom: 20.0),
                                     decoration: BoxDecoration(
                                       boxShadow: [
                                         BoxShadow(
