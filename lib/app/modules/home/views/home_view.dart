@@ -58,8 +58,7 @@ class HomeView extends GetView<HomeController> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(35),
                                 child: Image.network(
-                                  (user['profilePic'] != null &&
-                                          user['profilePic'] != '')
+                                  (user['profilePic'] != null && user['profilePic'] != '')
                                       ? user['profilePic']
                                       : defaultProfilePic,
                                   fit: BoxFit.cover,
@@ -84,9 +83,7 @@ class HomeView extends GetView<HomeController> {
                                 SizedBox(
                                   width: 230,
                                   child: Text(
-                                    user["address"] != null
-                                        ? '${user["address"]}'
-                                        : 'Location not yet available',
+                                    user["address"] != null ? '${user["address"]}' : 'Location not yet available',
                                     style: const TextStyle(
                                       fontSize: 15,
                                       color: Colors.white,
@@ -106,9 +103,7 @@ class HomeView extends GetView<HomeController> {
                         width: size.width,
                         decoration: const BoxDecoration(
                           color: secondaryColor,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(24),
-                              topRight: Radius.circular(24)),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -122,13 +117,10 @@ class HomeView extends GetView<HomeController> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   gradient: const LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment(0.8, 0.0),
-                                      colors: [blue300, blue400]),
+                                      begin: Alignment.topLeft, end: Alignment(0.8, 0.0), colors: [blue300, blue400]),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color(0xFF7090B0)
-                                          .withOpacity(0.2),
+                                      color: const Color(0xFF7090B0).withOpacity(0.2),
                                       blurRadius: 20.0,
                                       offset: const Offset(0, 10.0),
                                     )
@@ -137,8 +129,7 @@ class HomeView extends GetView<HomeController> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(20.0),
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         user['job'],
@@ -180,16 +171,14 @@ class HomeView extends GetView<HomeController> {
                                   borderRadius: BorderRadius.circular(16),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color(0xFF7090B0)
-                                          .withOpacity(0.2),
+                                      color: const Color(0xFF7090B0).withOpacity(0.2),
                                       blurRadius: 20.0,
                                       offset: const Offset(0, 10.0),
                                     )
                                   ],
                                 ),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
                                     Column(
                                       children: [
@@ -233,8 +222,7 @@ class HomeView extends GetView<HomeController> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 6.0),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
                                       'Last 5 days',
@@ -244,8 +232,7 @@ class HomeView extends GetView<HomeController> {
                                       ),
                                     ),
                                     TextButton(
-                                      onPressed: () =>
-                                          Get.toNamed(Routes.ALL_PRESENCE),
+                                      onPressed: () => Get.toNamed(Routes.ALL_PRESENCE),
                                       child: const Text(
                                         'See More',
                                         style: TextStyle(
@@ -260,84 +247,105 @@ class HomeView extends GetView<HomeController> {
                               const SizedBox(height: 8.0),
                               //! CARD 3
 
-                              ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: 5,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    margin: const EdgeInsets.only(bottom: 20.0),
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: const Color(0xFF7090B0)
-                                              .withOpacity(0.2),
-                                          blurRadius: 20.0,
-                                          offset: const Offset(0, 10.0),
-                                        )
-                                      ],
-                                    ),
-                                    child: Material(
-                                      borderRadius: BorderRadius.circular(16),
-                                      color: Colors.white,
-                                      child: InkWell(
-                                        onTap: () =>
-                                            Get.toNamed(Routes.DETAIL_PRESENCE),
-                                        borderRadius: BorderRadius.circular(16),
-                                        child: Container(
-                                          padding: const EdgeInsets.all(20.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  const Text(
-                                                    'Enter the office',
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    DateFormat.yMMMEd().format(
-                                                      DateTime.now(),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(height: 2.0),
-                                              Text(
-                                                DateFormat.jms().format(
-                                                  DateTime.now(),
-                                                ),
-                                              ),
-                                              const SizedBox(height: 12.0),
-                                              const Text(
-                                                'Out of office',
+                              StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                                  stream: controller.streamLastUser(),
+                                  builder: (context, snapshotPresence) {
+                                    if (snapshotPresence.connectionState == ConnectionState.waiting) {
+                                      return SizedBox(
+                                        height: size.height / 5,
+                                        child: const Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      );
+                                    }
+                                    if (snapshotPresence.data!.docs.isEmpty) {
+                                      return SizedBox(
+                                          height: size.height / 5,
+                                          child: const Center(
+                                            child: Text('No history presence yet',
                                                 style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 2.0),
-                                              Text(
-                                                DateFormat.jms().format(
-                                                  DateTime.now(),
-                                                ),
-                                              ),
+                                                    fontSize: 16, color: primaryColor, fontWeight: FontWeight.bold)),
+                                          ));
+                                    }
+                                    return ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      itemCount: snapshotPresence.data!.docs.length,
+                                      itemBuilder: (context, index) {
+                                        Map<String, dynamic> data =
+                                            snapshotPresence.data!.docs.reversed.toList()[index].data();
+                                        return Container(
+                                          margin: const EdgeInsets.only(bottom: 20.0),
+                                          decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: const Color(0xFF7090B0).withOpacity(0.2),
+                                                blurRadius: 20.0,
+                                                offset: const Offset(0, 10.0),
+                                              )
                                             ],
                                           ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              )
+                                          child: Material(
+                                            borderRadius: BorderRadius.circular(16),
+                                            color: Colors.white,
+                                            child: InkWell(
+                                              onTap: () => Get.toNamed(Routes.DETAIL_PRESENCE),
+                                              borderRadius: BorderRadius.circular(16),
+                                              child: Container(
+                                                padding: const EdgeInsets.all(20.0),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        const Text(
+                                                          'Enter the office',
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight: FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          DateFormat.yMMMEd().format(
+                                                            DateTime.parse(data['date']),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 2.0),
+                                                    Text(
+                                                      data['in']?['date'] == null
+                                                          ? '-'
+                                                          : DateFormat.jms().format(
+                                                              DateTime.parse(data['in']!['date']),
+                                                            ),
+                                                    ),
+                                                    const SizedBox(height: 12.0),
+                                                    const Text(
+                                                      'Out of office',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 2.0),
+                                                    Text(
+                                                      data['out']?['date'] == null
+                                                          ? '-'
+                                                          : DateFormat.jms().format(
+                                                              DateTime.parse(data['out']!['date']),
+                                                            ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  })
                             ],
                           ),
                         ),
@@ -358,8 +366,7 @@ class HomeView extends GetView<HomeController> {
           TabItem(icon: Icons.fingerprint, title: 'Presence'),
           TabItem(icon: CupertinoIcons.person_alt, title: 'Profile'),
         ],
-        initialActiveIndex:
-            pageController.pageIndex.value, //optional, default as 0
+        initialActiveIndex: pageController.pageIndex.value, //optional, default as 0
         onTap: (int i) => pageController.changePage(i),
       ),
     );
