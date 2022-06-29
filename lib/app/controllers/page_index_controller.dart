@@ -20,8 +20,7 @@ class PageIndexController extends GetxController {
         if (!(response['error'])) {
           Position position = response['position'];
 
-          List<Placemark> placemarks = await placemarkFromCoordinates(
-              position.latitude, position.longitude);
+          List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
 
           print(placemarks[0]);
 
@@ -30,17 +29,10 @@ class PageIndexController extends GetxController {
 
           await updatePosition(position, address);
 
-          double distance = Geolocator.distanceBetween(-6.803129646912052,
-              108.4838878199461, position.latitude, position.longitude);
+          double distance =
+              Geolocator.distanceBetween(-6.803129646912052, 108.4838878199461, position.latitude, position.longitude);
 
           await presence(position, address, distance);
-
-          Get.snackbar(
-            'Success',
-            "You have filled out today's presence list",
-            backgroundColor: Colors.black38,
-            colorText: Colors.white,
-          );
         } else {
           Get.snackbar(
             'Location Error',
@@ -63,15 +55,13 @@ class PageIndexController extends GetxController {
 
   /* Presence */
 
-  Future<void> presence(
-      Position position, String address, double distance) async {
+  Future<void> presence(Position position, String address, double distance) async {
     String uid = auth.currentUser!.uid;
 
     CollectionReference<Map<String, dynamic>> collectionPresence =
         firestore.collection('employee').doc(uid).collection('presence');
 
-    QuerySnapshot<Map<String, dynamic>> snapPresence =
-        await collectionPresence.get();
+    QuerySnapshot<Map<String, dynamic>> snapPresence = await collectionPresence.get();
 
     DateTime now = DateTime.now();
     String todayId = DateFormat.yMd().format(now).replaceAll('/', '-');
@@ -84,20 +74,44 @@ class PageIndexController extends GetxController {
     }
 
     if (snapPresence.docs.isEmpty) {
-      collectionPresence.doc(todayId).set({
-        'date': now.toIso8601String(),
-        'in': {
-          'date': now.toIso8601String(),
-          'lat': position.latitude,
-          'long': position.longitude,
-          'address': address,
-          'status': status,
-          'distance': distance.toStringAsFixed(2),
-        }
-      });
+      await Get.defaultDialog(
+          contentPadding: const EdgeInsets.only(bottom: 24.0, top: 12.0),
+          titlePadding: const EdgeInsets.only(top: 24.0),
+          title: 'Validation Presence In',
+          content: Column(
+            children: const [
+              Text("Verification presence in today?"),
+            ],
+          ),
+          actions: [
+            OutlinedButton(onPressed: () => Get.back(), child: const Text('CANCEL')),
+            ElevatedButton(
+                onPressed: () async {
+                  await collectionPresence.doc(todayId).set({
+                    'date': now.toIso8601String(),
+                    'in': {
+                      'date': now.toIso8601String(),
+                      'lat': position.latitude,
+                      'long': position.longitude,
+                      'address': address,
+                      'status': status,
+                      'distance': distance.toStringAsFixed(2),
+                    }
+                  });
+                  Get.back();
+                  Get.snackbar(
+                    'Success',
+                    "You have filled in today's presence list",
+                    backgroundColor: Colors.black38,
+                    colorText: Colors.white,
+                  );
+                },
+                child: const Text(
+                  'VALIDATE',
+                )),
+          ]);
     } else {
-      DocumentSnapshot<Map<String, dynamic>> todayDocument =
-          await collectionPresence.doc(todayId).get();
+      DocumentSnapshot<Map<String, dynamic>> todayDocument = await collectionPresence.doc(todayId).get();
       if (todayDocument.exists) {
         Map<String, dynamic>? todayPresenceData = todayDocument.data();
         if (todayPresenceData!['out'] != null) {
@@ -108,30 +122,81 @@ class PageIndexController extends GetxController {
             colorText: Colors.white,
           );
         } else {
-          collectionPresence.doc(todayId).update({
-            'date': now.toIso8601String(),
-            'out': {
-              'date': now.toIso8601String(),
-              'lat': position.latitude,
-              'long': position.longitude,
-              'address': address,
-              'status': status,
-              'distance': distance.toStringAsFixed(2),
-            }
-          });
+          await Get.defaultDialog(
+              contentPadding: const EdgeInsets.only(bottom: 24.0, top: 12.0),
+              titlePadding: const EdgeInsets.only(top: 24.0),
+              title: 'Validation Presence Out',
+              content: Column(
+                children: const [
+                  Text("Verification presence out today?"),
+                ],
+              ),
+              actions: [
+                OutlinedButton(onPressed: () => Get.back(), child: const Text('CANCEL')),
+                ElevatedButton(
+                    onPressed: () async {
+                      await collectionPresence.doc(todayId).update({
+                        'date': now.toIso8601String(),
+                        'out': {
+                          'date': now.toIso8601String(),
+                          'lat': position.latitude,
+                          'long': position.longitude,
+                          'address': address,
+                          'status': status,
+                          'distance': distance.toStringAsFixed(2),
+                        }
+                      });
+                      Get.back();
+                      Get.snackbar(
+                        'Success',
+                        "You have filled out today's presence list",
+                        backgroundColor: Colors.black38,
+                        colorText: Colors.white,
+                      );
+                    },
+                    child: const Text(
+                      'VALIDATE',
+                    )),
+              ]);
         }
       } else {
-        collectionPresence.doc(todayId).set({
-          'date': now.toIso8601String(),
-          'in': {
-            'date': now.toIso8601String(),
-            'lat': position.latitude,
-            'long': position.longitude,
-            'address': address,
-            'status': status,
-            'distance': distance.toStringAsFixed(2),
-          }
-        });
+        // Absen Masuk jika sudah ada data
+        await Get.defaultDialog(
+            contentPadding: const EdgeInsets.only(bottom: 24.0, top: 12.0),
+            titlePadding: const EdgeInsets.only(top: 24.0),
+            title: 'Validation Presence In',
+            content: Column(
+              children: const [
+                Text("Verification presence in today?"),
+              ],
+            ),
+            actions: [
+              OutlinedButton(onPressed: () => Get.back(), child: const Text('CANCEL')),
+              ElevatedButton(
+                  onPressed: () async {
+                    await collectionPresence.doc(todayId).set({
+                      'date': now.toIso8601String(),
+                      'in': {
+                        'date': now.toIso8601String(),
+                        'lat': position.latitude,
+                        'long': position.longitude,
+                        'address': address,
+                        'status': status,
+                        'distance': distance.toStringAsFixed(2),
+                      }
+                    });
+                    Get.back();
+                    Get.snackbar(
+                      'Success',
+                      "You have filled in today's presence list",
+                      backgroundColor: Colors.black38,
+                      colorText: Colors.white,
+                    );
+                  },
+                  child: const Text(
+                    'VALIDATE',
+                  )),
+            ]);
       }
     }
   }
@@ -187,8 +252,7 @@ class PageIndexController extends GetxController {
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
       return {
-        'message':
-            'Location permissions are permanently denied, we cannot request permissions.',
+        'message': 'Location permissions are permanently denied, we cannot request permissions.',
         'error': true,
       };
       // return Future.error(

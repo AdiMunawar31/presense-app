@@ -177,38 +177,74 @@ class HomeView extends GetView<HomeController> {
                                     )
                                   ],
                                 ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        const Text('Enter the office'),
-                                        const SizedBox(height: 2.0),
-                                        Text(
-                                          DateFormat.Hms().format(
-                                            DateTime.now(),
+                                child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                                    stream: controller.streamTodayUser(),
+                                    builder: (context, snapshotToday) {
+                                      if (snapshotToday.connectionState == ConnectionState.waiting) {
+                                        return Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                          children: [
+                                            const Center(
+                                              child: CircularProgressIndicator(),
+                                            ),
+                                            Container(
+                                              height: 40.0,
+                                              width: 2.0,
+                                              color: Colors.grey[300],
+                                            ),
+                                            const Center(
+                                              child: CircularProgressIndicator(),
+                                            ),
+                                          ],
+                                        );
+                                      }
+
+                                      Map<String, dynamic>? dataToday = snapshotToday.data?.data();
+                                      return Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Column(
+                                            children: [
+                                              const Text(
+                                                'Today In',
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 2.0),
+                                              Text(dataToday?['in'] == null
+                                                  ? '-'
+                                                  : DateFormat.jms().format(
+                                                      DateTime.parse(dataToday?['in']['date']),
+                                                    )),
+                                            ],
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    Container(
-                                      height: 40.0,
-                                      width: 2.0,
-                                      color: Colors.grey[300],
-                                    ),
-                                    Column(
-                                      children: [
-                                        const Text('Out of office'),
-                                        const SizedBox(height: 2.0),
-                                        Text(
-                                          DateFormat.Hms().format(
-                                            DateTime.now(),
+                                          Container(
+                                            height: 40.0,
+                                            width: 2.0,
+                                            color: Colors.grey[300],
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                          Column(
+                                            children: [
+                                              const Text(
+                                                'Today Out',
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 2.0),
+                                              Text(dataToday?['out'] == null
+                                                  ? '-'
+                                                  : DateFormat.jms().format(
+                                                      DateTime.parse(dataToday?['out']['date']),
+                                                    )),
+                                            ],
+                                          ),
+                                        ],
+                                      );
+                                    }),
                               ),
                               const SizedBox(height: 24.0),
 
@@ -272,8 +308,7 @@ class HomeView extends GetView<HomeController> {
                                       physics: const NeverScrollableScrollPhysics(),
                                       itemCount: snapshotPresence.data!.docs.length,
                                       itemBuilder: (context, index) {
-                                        Map<String, dynamic> data =
-                                            snapshotPresence.data!.docs.reversed.toList()[index].data();
+                                        Map<String, dynamic> data = snapshotPresence.data!.docs[index].data();
                                         return Container(
                                           margin: const EdgeInsets.only(bottom: 20.0),
                                           decoration: BoxDecoration(
