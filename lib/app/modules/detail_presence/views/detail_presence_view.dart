@@ -7,7 +7,9 @@ import 'package:intl/intl.dart';
 import '../controllers/detail_presence_controller.dart';
 
 class DetailPresenceView extends GetView<DetailPresenceController> {
-  const DetailPresenceView({Key? key}) : super(key: key);
+  final Map<String, dynamic> data = Get.arguments;
+
+  DetailPresenceView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -42,7 +44,7 @@ class DetailPresenceView extends GetView<DetailPresenceController> {
                     child: Center(
                       child: Text(
                         DateFormat.yMMMMEEEEd().format(
-                          DateTime.now(),
+                          DateTime.parse(data['date']),
                         ),
                         style: const TextStyle(
                           fontSize: 17,
@@ -117,9 +119,11 @@ class DetailPresenceView extends GetView<DetailPresenceController> {
                         ),
                         const SizedBox(height: 2.0),
                         Text(
-                          DateFormat.jms().format(
-                            DateTime.now(),
-                          ),
+                          data['in']?['date'] == null
+                              ? '-'
+                              : DateFormat.jms().format(
+                                  DateTime.parse(data['in']!['date']),
+                                ),
                         ),
                       ],
                     ),
@@ -142,16 +146,16 @@ class DetailPresenceView extends GetView<DetailPresenceController> {
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           'Position',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 2.0),
-                        Text('-42.34234 , 191.425221'),
+                        const SizedBox(height: 2.0),
+                        Text(data['in']?['lat'] == null ? '-' : "${data['in']?['lat']}, ${data['in']?['long']}"),
                       ],
                     ),
                   ),
@@ -173,16 +177,47 @@ class DetailPresenceView extends GetView<DetailPresenceController> {
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
+                          'Distance',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 2.0),
+                        Text(data['in']?['distance'] == null ? '-' : '${data['in']?['distance']} m'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  //! CARD 6
+
+                  Container(
+                    padding: const EdgeInsets.all(20.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF7090B0).withOpacity(0.2),
+                          blurRadius: 20.0,
+                          offset: const Offset(0, 10.0),
+                        )
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
                           'Status',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 2.0),
-                        Text('In Area'),
+                        const SizedBox(height: 2.0),
+                        Text(data['in']?['status'] ?? '-'),
                       ],
                     ),
                   ),
@@ -252,9 +287,11 @@ class DetailPresenceView extends GetView<DetailPresenceController> {
                         ),
                         const SizedBox(height: 2.0),
                         Text(
-                          DateFormat.jms().format(
-                            DateTime.now(),
-                          ),
+                          data['out']?['date'] == null
+                              ? '-'
+                              : DateFormat.jms().format(
+                                  DateTime.parse(data['out']!['date']),
+                                ),
                         ),
                       ],
                     ),
@@ -277,16 +314,16 @@ class DetailPresenceView extends GetView<DetailPresenceController> {
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           'Position',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 2.0),
-                        Text('-42.34234 , 191.425221'),
+                        const SizedBox(height: 2.0),
+                        Text(data['out']?['lat'] == null ? '-' : "${data['out']?['lat']}, ${data['out']?['long']}"),
                       ],
                     ),
                   ),
@@ -308,19 +345,51 @@ class DetailPresenceView extends GetView<DetailPresenceController> {
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
+                          'Distance',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 2.0),
+                        Text(data['out']?['distance'] == null ? '-' : '${data['out']?['distance']} m'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  //! CARD 6
+
+                  Container(
+                    padding: const EdgeInsets.all(20.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF7090B0).withOpacity(0.2),
+                          blurRadius: 20.0,
+                          offset: const Offset(0, 10.0),
+                        )
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
                           'Status',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 2.0),
-                        Text('In Area'),
+                        const SizedBox(height: 2.0),
+                        Text(data['out']?['status'] ?? '-'),
                       ],
                     ),
                   ),
+                  const SizedBox(height: 20.0),
                 ],
               ),
             ),
