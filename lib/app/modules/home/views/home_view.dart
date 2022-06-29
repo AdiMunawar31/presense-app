@@ -71,8 +71,8 @@ class HomeView extends GetView<HomeController> {
                             const SizedBox(width: 16.0),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text(
+                              children: [
+                                const Text(
                                   'Welcome',
                                   style: TextStyle(
                                     fontSize: 22,
@@ -80,12 +80,17 @@ class HomeView extends GetView<HomeController> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(height: 2.0),
-                                Text(
-                                  'Lokasi belum tersedia',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.white,
+                                const SizedBox(height: 2.0),
+                                SizedBox(
+                                  width: 230,
+                                  child: Text(
+                                    user["address"] != null
+                                        ? '${user["address"]}'
+                                        : 'Location not yet available',
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ],

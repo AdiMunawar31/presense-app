@@ -1,21 +1,43 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:d2ypresence/app/routes/app_pages.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class PageIndexController extends GetxController {
   RxInt pageIndex = 0.obs;
 
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   void changePage(int i) async {
     switch (i) {
       case 1:
-        print('Presence');
         Map<String, dynamic> response = await _determinePosition();
         if (!(response['error'])) {
           Position position = response['position'];
+
+          List<Placemark> placemarks = await placemarkFromCoordinates(
+              position.latitude, position.longitude);
+
+          print(placemarks[0]);
+
+          String address =
+              '${placemarks[0].subLocality} - ${placemarks[0].locality} - ${placemarks[0].subAdministrativeArea}';
+
+          await updatePosition(position, address);
+
+          double distance = Geolocator.distanceBetween(-6.803129646912052,
+              108.4838878199461, position.latitude, position.longitude);
+
+          await presence(position, address, distance);
+
           Get.snackbar(
-            response['message'],
-            '${position.latitude}, ${position.longitude}',
+            'Success',
+            "You have filled out today's presence list",
             backgroundColor: Colors.black38,
             colorText: Colors.white,
           );
@@ -37,6 +59,95 @@ class PageIndexController extends GetxController {
         pageIndex.value = i;
         Get.offAllNamed(Routes.HOME);
     }
+  }
+
+  /* Presence */
+
+  Future<void> presence(
+      Position position, String address, double distance) async {
+    String uid = auth.currentUser!.uid;
+
+    CollectionReference<Map<String, dynamic>> collectionPresence =
+        firestore.collection('employee').doc(uid).collection('presence');
+
+    QuerySnapshot<Map<String, dynamic>> snapPresence =
+        await collectionPresence.get();
+
+    DateTime now = DateTime.now();
+    String todayId = DateFormat.yMd().format(now).replaceAll('/', '-');
+
+    String status = 'Outside the area';
+    print('Distance : $distance');
+
+    if (distance <= 100) {
+      status = 'Inside the area';
+    }
+
+    if (snapPresence.docs.isEmpty) {
+      collectionPresence.doc(todayId).set({
+        'date': now.toIso8601String(),
+        'in': {
+          'date': now.toIso8601String(),
+          'lat': position.latitude,
+          'long': position.longitude,
+          'address': address,
+          'status': status,
+          'distance': distance.toStringAsFixed(2),
+        }
+      });
+    } else {
+      DocumentSnapshot<Map<String, dynamic>> todayDocument =
+          await collectionPresence.doc(todayId).get();
+      if (todayDocument.exists) {
+        Map<String, dynamic>? todayPresenceData = todayDocument.data();
+        if (todayPresenceData!['out'] != null) {
+          Get.snackbar(
+            'Warning',
+            'You have done presence today',
+            backgroundColor: Colors.black38,
+            colorText: Colors.white,
+          );
+        } else {
+          collectionPresence.doc(todayId).update({
+            'date': now.toIso8601String(),
+            'out': {
+              'date': now.toIso8601String(),
+              'lat': position.latitude,
+              'long': position.longitude,
+              'address': address,
+              'status': status,
+              'distance': distance.toStringAsFixed(2),
+            }
+          });
+        }
+      } else {
+        collectionPresence.doc(todayId).set({
+          'date': now.toIso8601String(),
+          'in': {
+            'date': now.toIso8601String(),
+            'lat': position.latitude,
+            'long': position.longitude,
+            'address': address,
+            'status': status,
+            'distance': distance.toStringAsFixed(2),
+          }
+        });
+      }
+    }
+  }
+
+  /* Update Position */
+
+  Future<void> updatePosition(Position position, String address) async {
+    String uid = auth.currentUser!.uid;
+
+    await firestore.collection('employee').doc(uid).update({
+      'position': {
+        'lat': position.latitude,
+        'long': position.longitude,
+      },
+      'address': address,
+    });
   }
 
   Future<Map<String, dynamic>> _determinePosition() async {
