@@ -31,9 +31,9 @@ class ProfileView extends GetView<ProfileController> {
               );
             }
             if (snapshot.hasData) {
-              Map<String, dynamic> user = snapshot.data!.data()!;
+              Map<String, dynamic>? user = snapshot.data?.data();
               String defaultProfilePic =
-                  'https://ui-avatars.com/api/?name=${user["name"]}&background=27A8FD&color=fff&bold=true';
+                  'https://ui-avatars.com/api/?name=${user?["name"]}&background=27A8FD&color=fff&bold=true';
               return SafeArea(
                 child: SingleChildScrollView(
                   child: Center(
@@ -41,33 +41,6 @@ class ProfileView extends GetView<ProfileController> {
                       children: [
                         Column(
                           children: [
-                            // Container(
-                            //   width: size.width / 1,
-                            //   padding:
-                            //       const EdgeInsets.symmetric(horizontal: 8.0),
-                            //   child: Row(
-                            //     mainAxisAlignment:
-                            //         MainAxisAlignment.spaceBetween,
-                            //     children: [
-                            //       IconButton(
-                            //           onPressed: () {
-                            //             Get.back();
-                            //           },
-                            //           icon: const Icon(
-                            //             Icons.arrow_back,
-                            //             color: secondaryColor,
-                            //             size: 24,
-                            //           )),
-                            //       IconButton(
-                            //           onPressed: () {},
-                            //           icon: const Icon(
-                            //             Icons.more_vert,
-                            //             color: secondaryColor,
-                            //             size: 24,
-                            //           )),
-                            //     ],
-                            //   ),
-                            // ),
                             Container(
                               width: 120,
                               height: 120,
@@ -84,9 +57,8 @@ class ProfileView extends GetView<ProfileController> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(60),
                                 child: Image.network(
-                                  (user['profilePic'] != null &&
-                                          user['profilePic'] != '')
-                                      ? user['profilePic']
+                                  (user?['profilePic'] != null && user?['profilePic'] != '')
+                                      ? user!['profilePic']
                                       : defaultProfilePic,
                                   fit: BoxFit.cover,
                                   width: 120,
@@ -96,17 +68,13 @@ class ProfileView extends GetView<ProfileController> {
                             ),
                             const SizedBox(height: 12.0),
                             Text(
-                              "${user['name']}",
-                              style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: secondaryColor),
+                              user?['name'] != null ? user!['name'] : '',
+                              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: secondaryColor),
                             ),
                             const SizedBox(height: 8.0),
                             Text(
-                              "${user['email']}",
-                              style: const TextStyle(
-                                  fontSize: 16, color: secondaryColor),
+                              user?['email'] != null ? user!['email'] : '',
+                              style: const TextStyle(fontSize: 16, color: secondaryColor),
                             )
                           ],
                         ),
@@ -145,15 +113,14 @@ class ProfileView extends GetView<ProfileController> {
                           height: size.height,
                           decoration: const BoxDecoration(
                             color: secondaryColor,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20)),
+                            borderRadius:
+                                BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
                           ),
                           child: Column(
                             children: [
                               const SizedBox(height: 8.0),
                               /* Add Employee */
-                              if (user['role'] == 'admin')
+                              if (user?['role'] == 'admin')
                                 profileItem(
                                   Icons.groups_rounded,
                                   'Add Employee',
@@ -181,8 +148,7 @@ class ProfileView extends GetView<ProfileController> {
                               ),
 
                               /* Change Password */
-                              profileItem(Icons.logout_rounded, 'Logout',
-                                  Icons.keyboard_arrow_right_rounded, () {
+                              profileItem(Icons.logout_rounded, 'Logout', Icons.keyboard_arrow_right_rounded, () {
                                 controller.logout(context);
                               }),
                             ],
@@ -207,8 +173,7 @@ class ProfileView extends GetView<ProfileController> {
           TabItem(icon: Icons.fingerprint, title: 'Presence'),
           TabItem(icon: CupertinoIcons.person_alt, title: 'Profile'),
         ],
-        initialActiveIndex:
-            pageController.pageIndex.value, //optional, default as 0
+        initialActiveIndex: pageController.pageIndex.value, //optional, default as 0
         onTap: (int i) => pageController.changePage(i),
       ),
     );

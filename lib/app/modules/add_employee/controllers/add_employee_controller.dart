@@ -24,8 +24,7 @@ class AddEmployeeController extends GetxController {
       try {
         String emailAdmin = auth.currentUser!.email!;
 
-        await auth.signInWithEmailAndPassword(
-            email: emailAdmin, password: passAdminController.text);
+        await auth.signInWithEmailAndPassword(email: emailAdmin, password: passAdminController.text);
 
         UserCredential credential = await auth.createUserWithEmailAndPassword(
           email: emailController.text,
@@ -46,8 +45,7 @@ class AddEmployeeController extends GetxController {
           }).then((res) => {
                 credential.user!.sendEmailVerification(),
                 auth.signOut(),
-                auth.signInWithEmailAndPassword(
-                    email: emailAdmin, password: passAdminController.text),
+                auth.signInWithEmailAndPassword(email: emailAdmin, password: passAdminController.text),
                 Get.back(),
                 Get.back(),
                 Get.snackbar(
@@ -118,8 +116,8 @@ class AddEmployeeController extends GetxController {
               const SizedBox(height: 12),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: inputItem(context, 'Password', passAdminController, true,
-                    const Icon(CupertinoIcons.lock_circle)),
+                child:
+                    inputItem(context, 'Password', passAdminController, true, const Icon(CupertinoIcons.lock_circle)),
               ),
             ],
           ),
