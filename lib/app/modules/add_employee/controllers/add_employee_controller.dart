@@ -42,19 +42,20 @@ class AddEmployeeController extends GetxController {
             'uid': uid,
             'role': 'user',
             'createdAt': DateTime.now().toIso8601String(),
-          }).then((res) => {
-                credential.user!.sendEmailVerification(),
-                auth.signOut(),
-                auth.signInWithEmailAndPassword(email: emailAdmin, password: passAdminController.text),
-                Get.back(),
-                Get.back(),
-                Get.snackbar(
-                  'Success',
-                  'Employee added successfully',
-                  backgroundColor: Colors.black38,
-                  colorText: Colors.white,
-                ),
-              });
+          });
+
+          await credential.user!.sendEmailVerification();
+          await auth.signOut();
+          await auth.signInWithEmailAndPassword(email: emailAdmin, password: passAdminController.text);
+
+          Get.back();
+          Get.back();
+          Get.snackbar(
+            'Success',
+            'Employee added successfully',
+            backgroundColor: Colors.black38,
+            colorText: Colors.white,
+          );
         }
       } on FirebaseAuthException catch (e) {
         isLoadingValidate.value = false;

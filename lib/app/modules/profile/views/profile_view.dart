@@ -68,12 +68,12 @@ class ProfileView extends GetView<ProfileController> {
                             ),
                             const SizedBox(height: 12.0),
                             Text(
-                              user?['name'] != null ? user!['name'] : '',
+                              user?['name'] != null ? user!['name'] : 'Loading...',
                               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: secondaryColor),
                             ),
                             const SizedBox(height: 8.0),
                             Text(
-                              user?['email'] != null ? user!['email'] : '',
+                              user?['email'] != null ? user!['email'] : 'Loading...',
                               style: const TextStyle(fontSize: 16, color: secondaryColor),
                             )
                           ],
