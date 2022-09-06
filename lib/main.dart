@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'app/routes/app_pages.dart';
 
@@ -23,35 +24,37 @@ void main() async {
 
   Get.put(PageIndexController(), permanent: true);
 
-  runApp(
-    StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const MaterialApp(
-              home: Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-            );
-          }
-          print(snapshot.data);
-          return GetMaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: "d2ypresence",
-            theme: ThemeData(
-              colorScheme: ThemeData.light().colorScheme.copyWith(
-                    primary: primaryColor,
-                    onPrimary: Colors.white,
+  await initializeDateFormatting('id_ID', null).then((_) {
+    runApp(
+      StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const MaterialApp(
+                home: Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(),
                   ),
-              scaffoldBackgroundColor: secondaryColor,
-              visualDensity: VisualDensity.adaptivePlatformDensity,
-              appBarTheme: const AppBarTheme(elevation: 0),
-            ),
-            initialRoute: snapshot.data != null ? Routes.HOME : Routes.LOGIN,
-            getPages: AppPages.routes,
-          );
-        }),
-  );
+                ),
+              );
+            }
+            print(snapshot.data);
+            return GetMaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: "d2ypresence",
+              theme: ThemeData(
+                colorScheme: ThemeData.light().colorScheme.copyWith(
+                      primary: primaryColor,
+                      onPrimary: Colors.white,
+                    ),
+                scaffoldBackgroundColor: secondaryColor,
+                visualDensity: VisualDensity.adaptivePlatformDensity,
+                appBarTheme: const AppBarTheme(elevation: 0),
+              ),
+              initialRoute: snapshot.data != null ? Routes.HOME : Routes.LOGIN,
+              getPages: AppPages.routes,
+            );
+          }),
+    );
+  });
 }

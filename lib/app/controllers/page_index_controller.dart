@@ -32,7 +32,19 @@ class PageIndexController extends GetxController {
           double distance =
               Geolocator.distanceBetween(-6.803129646912052, 108.4838878199461, position.latitude, position.longitude);
 
-          await presence(position, address, distance);
+          print(distance);
+
+          // cek apakah posisi berada di dalam area
+          if (distance <= 700) {
+            await presence(position, address, distance);
+          } else {
+            Get.snackbar(
+              'Location Error',
+              'Kamu Berada diluar Area',
+              backgroundColor: Colors.black38,
+              colorText: Colors.white,
+            );
+          }
         } else {
           Get.snackbar(
             'Location Error',
@@ -64,6 +76,8 @@ class PageIndexController extends GetxController {
     QuerySnapshot<Map<String, dynamic>> snapPresence = await collectionPresence.get();
 
     DateTime now = DateTime.now();
+    String hour = DateFormat.Hms().format(now);
+    String day = DateFormat.yMMMMEEEEd('id_ID').format(now);
     String todayId = DateFormat.yMd().format(now).replaceAll('/', '-');
 
     String status = 'Outside the area';
@@ -91,6 +105,8 @@ class PageIndexController extends GetxController {
                     'date': now.toIso8601String(),
                     'in': {
                       'date': now.toIso8601String(),
+                      'hour': hour,
+                      'day': day,
                       'lat': position.latitude,
                       'long': position.longitude,
                       'address': address,
@@ -139,6 +155,8 @@ class PageIndexController extends GetxController {
                         'date': now.toIso8601String(),
                         'out': {
                           'date': now.toIso8601String(),
+                          'hour': hour,
+                          'day': day,
                           'lat': position.latitude,
                           'long': position.longitude,
                           'address': address,
@@ -178,6 +196,8 @@ class PageIndexController extends GetxController {
                       'date': now.toIso8601String(),
                       'in': {
                         'date': now.toIso8601String(),
+                        'hour': hour,
+                        'day': day,
                         'lat': position.latitude,
                         'long': position.longitude,
                         'address': address,
@@ -261,7 +281,9 @@ class PageIndexController extends GetxController {
 
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
-    Position position = await Geolocator.getCurrentPosition();
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
     return {
       'position': position,
       'message': 'Successfully got your current location',

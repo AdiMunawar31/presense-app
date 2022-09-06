@@ -342,7 +342,7 @@ class HomeView extends GetView<HomeController> {
                                                           ),
                                                         ),
                                                         Text(
-                                                          DateFormat.yMMMEd().format(
+                                                          DateFormat.yMMMEd('id_ID').format(
                                                             DateTime.parse(data['date']),
                                                           ),
                                                         ),
