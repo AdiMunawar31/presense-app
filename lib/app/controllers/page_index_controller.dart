@@ -29,14 +29,26 @@ class PageIndexController extends GetxController {
 
           await updatePosition(position, address);
 
-          double distance =
-              Geolocator.distanceBetween(-6.803129646912052, 108.4838878199461, position.latitude, position.longitude);
-
+          // -6.803129646912052, 108.4838878199461,
+          double distance = Geolocator.distanceBetween(-6.8049947, 108.4787143, position.latitude, position.longitude);
           print(distance);
 
+          DateTime now = DateTime.now();
+          String hourString = DateFormat.Hms().format(now).split(':').first;
+          var hour = int.parse(hourString);
+          print(hour);
           // cek apakah posisi berada di dalam area
-          if (distance <= 700) {
-            await presence(position, address, distance);
+          if (distance <= 20) {
+            if (hour >= 8 && hour <= 16) {
+              await presence(position, address, distance);
+            } else {
+              Get.snackbar(
+                'Waktu Tidak Sesuai',
+                'Kamu hanya bisa absen pada jam 08:00 - 16:00',
+                backgroundColor: Colors.black38,
+                colorText: Colors.white,
+              );
+            }
           } else {
             Get.snackbar(
               'Location Error',
@@ -79,6 +91,9 @@ class PageIndexController extends GetxController {
     String hour = DateFormat.Hms().format(now);
     String day = DateFormat.yMMMMEEEEd('id_ID').format(now);
     String todayId = DateFormat.yMd().format(now).replaceAll('/', '-');
+
+    String hourString = DateFormat.Hms().format(now).split(':').first;
+    var currentHour = int.parse(hourString);
 
     String status = 'Outside the area';
     print('Distance : $distance');
@@ -138,44 +153,53 @@ class PageIndexController extends GetxController {
             colorText: Colors.white,
           );
         } else {
-          await Get.defaultDialog(
-              contentPadding: const EdgeInsets.only(bottom: 24.0, top: 12.0),
-              titlePadding: const EdgeInsets.only(top: 24.0),
-              title: 'Validation Presence Out',
-              content: Column(
-                children: const [
-                  Text("Verification presence out today?"),
-                ],
-              ),
-              actions: [
-                OutlinedButton(onPressed: () => Get.back(), child: const Text('CANCEL')),
-                ElevatedButton(
-                    onPressed: () async {
-                      await collectionPresence.doc(todayId).update({
-                        'date': now.toIso8601String(),
-                        'out': {
+          if (currentHour >= 15 && currentHour <= 16) {
+            await Get.defaultDialog(
+                contentPadding: const EdgeInsets.only(bottom: 24.0, top: 12.0),
+                titlePadding: const EdgeInsets.only(top: 24.0),
+                title: 'Validation Presence Out',
+                content: Column(
+                  children: const [
+                    Text("Verification presence out today?"),
+                  ],
+                ),
+                actions: [
+                  OutlinedButton(onPressed: () => Get.back(), child: const Text('CANCEL')),
+                  ElevatedButton(
+                      onPressed: () async {
+                        await collectionPresence.doc(todayId).update({
                           'date': now.toIso8601String(),
-                          'hour': hour,
-                          'day': day,
-                          'lat': position.latitude,
-                          'long': position.longitude,
-                          'address': address,
-                          'status': status,
-                          'distance': distance.toStringAsFixed(2),
-                        }
-                      });
-                      Get.back();
-                      Get.snackbar(
-                        'Success',
-                        "You have filled out today's presence list",
-                        backgroundColor: Colors.black38,
-                        colorText: Colors.white,
-                      );
-                    },
-                    child: const Text(
-                      'VALIDATE',
-                    )),
-              ]);
+                          'out': {
+                            'date': now.toIso8601String(),
+                            'hour': hour,
+                            'day': day,
+                            'lat': position.latitude,
+                            'long': position.longitude,
+                            'address': address,
+                            'status': status,
+                            'distance': distance.toStringAsFixed(2),
+                          }
+                        });
+                        Get.back();
+                        Get.snackbar(
+                          'Success',
+                          "You have filled out today's presence list",
+                          backgroundColor: Colors.black38,
+                          colorText: Colors.white,
+                        );
+                      },
+                      child: const Text(
+                        'VALIDATE',
+                      )),
+                ]);
+          } else {
+            Get.snackbar(
+              'Waktu Tidak Sesuai',
+              'Kamu hanya bisa absen keluar pada jam 15:00 - 16:00',
+              backgroundColor: Colors.black38,
+              colorText: Colors.white,
+            );
+          }
         }
       } else {
         // Absen Masuk jika sudah ada data
