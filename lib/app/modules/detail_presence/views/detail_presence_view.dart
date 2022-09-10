@@ -43,7 +43,7 @@ class DetailPresenceView extends GetView<DetailPresenceController> {
                     ),
                     child: Center(
                       child: Text(
-                        DateFormat.yMMMMEEEEd().format(
+                        DateFormat.yMMMMEEEEd('id_ID').format(
                           DateTime.parse(data['date']),
                         ),
                         style: const TextStyle(

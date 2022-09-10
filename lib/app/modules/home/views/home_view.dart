@@ -215,7 +215,7 @@ class HomeView extends GetView<HomeController> {
                                               const SizedBox(height: 2.0),
                                               Text(dataToday?['in'] == null
                                                   ? '-'
-                                                  : DateFormat.jms().format(
+                                                  : DateFormat.Hms().format(
                                                       DateTime.parse(dataToday?['in']['date']),
                                                     )),
                                             ],
@@ -237,7 +237,7 @@ class HomeView extends GetView<HomeController> {
                                               const SizedBox(height: 2.0),
                                               Text(dataToday?['out'] == null
                                                   ? '-'
-                                                  : DateFormat.jms().format(
+                                                  : DateFormat.Hms().format(
                                                       DateTime.parse(dataToday?['out']['date']),
                                                     )),
                                             ],

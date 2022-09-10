@@ -38,7 +38,7 @@ class PageIndexController extends GetxController {
           var hour = int.parse(hourString);
           print(hour);
           // cek apakah posisi berada di dalam area
-          if (distance <= 20) {
+          if (distance <= 10) {
             if (hour >= 8 && hour <= 16) {
               await presence(position, address, distance);
             } else {
@@ -98,7 +98,7 @@ class PageIndexController extends GetxController {
     String status = 'Outside the area';
     print('Distance : $distance');
 
-    if (distance <= 100) {
+    if (distance <= 10) {
       status = 'Inside the area';
     }
 
