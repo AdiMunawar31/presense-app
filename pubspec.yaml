@@ -21,6 +21,7 @@ dependencies:
   image_picker: ^0.8.5+3
   intl: ^0.17.0
   syncfusion_flutter_datepicker: ^20.1.61
+  qrscan: ^0.3.3
 
 dev_dependencies:
   flutter_lints: 2.0.1
