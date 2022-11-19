@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -7,15 +8,18 @@ import 'package:intl/intl.dart';
 import 'package:d2ypresence/app/widgets/dialog/custom_alert_dialog.dart';
 import 'package:d2ypresence/app/widgets/toast/custom_toast.dart';
 import 'package:d2ypresence/company_data.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 
 class PresenceController extends GetxController {
-  RxBool isLoading = false.obs;
+  // RxBool isLoading = false.obs;
+
+  String? qr = "";
 
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   presence() async {
-    isLoading.value = true;
+    // isLoading.value = true;
     Map<String, dynamic> determinePosition = await _determinePosition();
     if (!determinePosition["error"]) {
       Position position = determinePosition["position"];
@@ -42,9 +46,9 @@ class PresenceController extends GetxController {
         CustomToast.errorToast("Error", "Pastikan anda berada di wilayah kantor Desa Mekarjaya");
       }
 
-      isLoading.value = false;
+      // isLoading.value = false;
     } else {
-      isLoading.value = false;
+      // isLoading.value = false;
       Get.snackbar("Terjadi kesalahan", determinePosition["message"]);
     }
   }
@@ -273,5 +277,11 @@ class PresenceController extends GetxController {
       "message": "Berhasil mendapatkan posisi device",
       "error": false,
     };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
   }
 }
