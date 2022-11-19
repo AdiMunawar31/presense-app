@@ -171,7 +171,7 @@ class PresenceController extends GetxController {
     var jamSekarang = int.parse(jamStr);
 
     CollectionReference<Map<String, dynamic>> presenceCollection =
-        firestore.collection("pegawai").doc(uid).collection("presensi");
+        firestore.collection("employee").doc(uid).collection("presensi");
     QuerySnapshot<Map<String, dynamic>> snapshotPreference = await presenceCollection.get();
 
     bool inArea = false;
@@ -215,8 +215,8 @@ class PresenceController extends GetxController {
 
   Future<void> updatePosition(Position position, String address) async {
     String uid = auth.currentUser!.uid;
-    await firestore.collection("pegawai").doc(uid).update({
-      "posisi": {
+    await firestore.collection("employee").doc(uid).update({
+      "position": {
         "latitude": position.latitude,
         "longitude": position.longitude,
       },
