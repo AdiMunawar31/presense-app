@@ -67,16 +67,16 @@ class PresenceController extends GetxController {
       onConfirm: () async {
         await presenceCollection.doc(todayDocId).set(
           {
-            "tanggal": DateTime.now().toIso8601String(),
-            "masuk": {
-              "tanggal": DateTime.now().toIso8601String(),
-              "jam": jam,
-              "hari": hari,
+            "date": DateTime.now().toIso8601String(),
+            "in": {
+              "date": DateTime.now().toIso8601String(),
+              "hour": jam,
+              "day": hari,
               "latitude": position.latitude,
               "longitude": position.longitude,
-              "lokasi": address,
+              "address": address,
               "in_area": inArea,
-              "jarak": distance.toStringAsFixed(2),
+              "distance": distance.toStringAsFixed(2),
               "keterangan": keterangan
             }
           },
@@ -105,16 +105,16 @@ class PresenceController extends GetxController {
       onConfirm: () async {
         await presenceCollection.doc(todayDocId).set(
           {
-            "tanggal": DateTime.now().toIso8601String(),
-            "masuk": {
-              "tanggal": DateTime.now().toIso8601String(),
-              "jam": jam,
-              "hari": hari,
+            "date": DateTime.now().toIso8601String(),
+            "in": {
+              "date": DateTime.now().toIso8601String(),
+              "hour": jam,
+              "day": hari,
               "latitude": position.latitude,
               "longitude": position.longitude,
-              "lokasi": address,
+              "address": address,
               "in_area": inArea,
-              "jarak": distance.toStringAsFixed(2),
+              "distance": distance.toStringAsFixed(2),
               "keterangan": keterangan
             }
           },
@@ -143,14 +143,14 @@ class PresenceController extends GetxController {
         await presenceCollection.doc(todayDocId).update(
           {
             "keluar": {
-              "tanggal": DateTime.now().toIso8601String(),
-              "jam": jam,
-              "hari": hari,
+              "date": DateTime.now().toIso8601String(),
+              "hour": jam,
+              "day": hari,
               "latitude": position.latitude,
               "longitude": position.longitude,
-              "lokasi": address,
+              "address": address,
               "in_area": inArea,
-              "jarak": distance.toStringAsFixed(2),
+              "distance": distance.toStringAsFixed(2),
             }
           },
         );
@@ -171,7 +171,7 @@ class PresenceController extends GetxController {
     var jamSekarang = int.parse(jamStr);
 
     CollectionReference<Map<String, dynamic>> presenceCollection =
-        firestore.collection("employee").doc(uid).collection("presensi");
+        firestore.collection("employee").doc(uid).collection("presence");
     QuerySnapshot<Map<String, dynamic>> snapshotPreference = await presenceCollection.get();
 
     bool inArea = false;
@@ -179,7 +179,7 @@ class PresenceController extends GetxController {
       inArea = true;
     }
 
-    String keterangan = 'Telat';
+    String keterangan = 'Terlambat';
     if (jamSekarang <= 8) {
       keterangan = 'Tepat Waktu';
     }
@@ -220,7 +220,7 @@ class PresenceController extends GetxController {
         "latitude": position.latitude,
         "longitude": position.longitude,
       },
-      "lokasi": address,
+      "address": address,
     });
   }
 
