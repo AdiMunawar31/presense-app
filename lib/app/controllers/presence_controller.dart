@@ -13,8 +13,6 @@ import 'package:d2ypresence/company_data.dart';
 class PresenceController extends GetxController {
   // RxBool isLoading = false.obs;
 
-  String? qr = "";
-
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -36,9 +34,9 @@ class PresenceController extends GetxController {
 
       // print(placemarks[0]);
 
-      DateTime now = DateTime.now();
-      String jamString = DateFormat.Hms().format(now).split(':').first;
-      var jam = int.parse(jamString);
+      // DateTime now = DateTime.now();
+      // String jamString = DateFormat.Hms().format(now).split(':').first;
+      // var jam = int.parse(jamString);
 
       if (distance <= 15) {
         await processPresence(position, address, distance);
@@ -69,24 +67,18 @@ class PresenceController extends GetxController {
       message: "Anda perlu mengkonfirmasi sebelum Anda melakukan kehadiran sekarang",
       onCancel: () => Get.back(),
       onConfirm: () async {
-        await presenceCollection.doc(todayDocId).set(
-          {
-            "date": DateTime.now().toIso8601String(),
-            "in": {
-              "date": DateTime.now().toIso8601String(),
-              "hour": jam,
-              "day": hari,
-              "latitude": position.latitude,
-              "longitude": position.longitude,
-              "address": address,
-              "in_area": inArea,
-              "distance": distance.toStringAsFixed(2),
-              "keterangan": keterangan
-            }
-          },
-        );
-        Get.back();
-        CustomToast.successToast("Berhasil", "Berhasil absen masuk");
+        Map<String, dynamic> data = {
+          "date": DateTime.now().toIso8601String(),
+          "hour": jam,
+          "day": hari,
+          "latitude": position.latitude,
+          "longitude": position.longitude,
+          "address": address,
+          "in_area": inArea,
+          "distance": distance.toStringAsFixed(2),
+          "keterangan": keterangan
+        };
+        Get.offAllNamed(Routes.QR_SCAN, arguments: data);
       },
     );
   }
@@ -104,28 +96,21 @@ class PresenceController extends GetxController {
   ) async {
     CustomAlertDialog.showPresenceAlert(
       title: "Apakah anda ingin absen masuk?",
-      message: "Anda perlu mengkonfirmasi sebelum Anda melakukan kehadiran sekarang",
+      message: "Anda perlu mengkonfirmasi QR Code sebelum Anda melakukan kehadiran sekarang",
       onCancel: () => Get.back(),
       onConfirm: () async {
-        // await presenceCollection.doc(todayDocId).set(
-        //   {
-        //     "date": DateTime.now().toIso8601String(),
-        //     "in": {
-        //       "date": DateTime.now().toIso8601String(),
-        //       "hour": jam,
-        //       "day": hari,
-        //       "latitude": position.latitude,
-        //       "longitude": position.longitude,
-        //       "address": address,
-        //       "in_area": inArea,
-        //       "distance": distance.toStringAsFixed(2),
-        //       "keterangan": keterangan
-        //     }
-        //   },
-        // );
-        // Get.back();
-        // CustomToast.successToast("Berhasil", "Berhasil absen masuk");
-        Get.toNamed(Routes.QR_SCAN);
+        Map<String, dynamic> data = {
+          "date": DateTime.now().toIso8601String(),
+          "hour": jam,
+          "day": hari,
+          "latitude": position.latitude,
+          "longitude": position.longitude,
+          "address": address,
+          "in_area": inArea,
+          "distance": distance.toStringAsFixed(2),
+          "keterangan": keterangan
+        };
+        Get.offAllNamed(Routes.QR_SCAN, arguments: data);
       },
     );
   }
@@ -145,22 +130,17 @@ class PresenceController extends GetxController {
       message: "Anda perlu mengkonfirmasi sebelum Anda melakukan kehadiran sekarang",
       onCancel: () => Get.back(),
       onConfirm: () async {
-        await presenceCollection.doc(todayDocId).update(
-          {
-            "keluar": {
-              "date": DateTime.now().toIso8601String(),
-              "hour": jam,
-              "day": hari,
-              "latitude": position.latitude,
-              "longitude": position.longitude,
-              "address": address,
-              "in_area": inArea,
-              "distance": distance.toStringAsFixed(2),
-            }
-          },
-        );
-        Get.back();
-        CustomToast.successToast("Berhasil", "Berhasil absen keluar");
+        Map<String, dynamic> data = {
+          "date": DateTime.now().toIso8601String(),
+          "hour": jam,
+          "day": hari,
+          "latitude": position.latitude,
+          "longitude": position.longitude,
+          "address": address,
+          "in_area": inArea,
+          "distance": distance.toStringAsFixed(2),
+        };
+        Get.offAllNamed(Routes.QR_SCAN, arguments: data);
       },
     );
   }
