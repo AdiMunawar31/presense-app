@@ -15,6 +15,7 @@ abstract class Routes {
   static const DETAIL_PRESENCE = _Paths.DETAIL_PRESENCE;
   static const ALL_PRESENCE = _Paths.ALL_PRESENCE;
   static const QR_SCAN = _Paths.QR_SCAN;
+  static const SUCCESS = _Paths.SUCCESS;
 }
 
 abstract class _Paths {
@@ -31,4 +32,5 @@ abstract class _Paths {
   static const DETAIL_PRESENCE = '/detail-presence';
   static const ALL_PRESENCE = '/all-presence';
   static const QR_SCAN = '/qr-scan';
+  static const SUCCESS = '/success';
 }

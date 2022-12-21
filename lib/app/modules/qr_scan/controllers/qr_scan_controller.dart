@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:d2ypresence/app/routes/app_pages.dart';
 import 'package:d2ypresence/app/widgets/toast/custom_toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -60,18 +61,18 @@ class QrScanController extends GetxController {
         "date": DateTime.now().toIso8601String(),
         "in": {
           "date": data['date'],
-          "hour": data['jam'],
-          "day": data['hari'],
-          "latitude": data['latitude'],
-          "longitude": data['longitude'],
+          "hour": data['hour'],
+          "day": data['day'],
+          "lat": data['latitude'],
+          "long": data['longitude'],
           "address": data['address'],
-          "in_area": data['inArea'],
+          "status": data['in_area'],
           "distance": data['distance'],
           "keterangan": data['keterangan']
         }
       },
     );
-    Get.back();
+    Get.offAllNamed(Routes.SUCCESS);
     CustomToast.successToast("Berhasil", "Berhasil absen masuk");
   }
 
@@ -84,18 +85,18 @@ class QrScanController extends GetxController {
         "date": DateTime.now().toIso8601String(),
         "in": {
           "date": data['date'],
-          "hour": data['jam'],
-          "day": data['hari'],
-          "latitude": data['latitude'],
-          "longitude": data['longitude'],
+          "hour": data['hour'],
+          "day": data['day'],
+          "lat": data['latitude'],
+          "long": data['longitude'],
           "address": data['address'],
-          "in_area": data['inArea'],
+          "status": data['in_area'],
           "distance": data['distance'],
           "keterangan": data['keterangan']
         }
       },
     );
-    Get.back();
+    Get.offAllNamed(Routes.SUCCESS);
     CustomToast.successToast("Berhasil", "Berhasil absen masuk");
   }
 
@@ -105,19 +106,19 @@ class QrScanController extends GetxController {
   ) async {
     await presenceCollection.doc(todayDocId).update(
       {
-        "keluar": {
+        "out": {
           "date": data['date'],
-          "hour": data['jam'],
-          "day": data['hari'],
-          "latitude": data['latitude'],
-          "longitude": data['longitude'],
+          "hour": data['hour'],
+          "day": data['day'],
+          "lat": data['latitude'],
+          "long": data['longitude'],
           "address": data['address'],
-          "in_area": data['inArea'],
+          "status": data['in_area'],
           "distance": data['distance'],
         }
       },
     );
-    Get.back();
+    Get.offAllNamed(Routes.SUCCESS);
     CustomToast.successToast("Berhasil", "Berhasil absen keluar");
   }
 

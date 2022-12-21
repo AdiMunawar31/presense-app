@@ -2,6 +2,7 @@ import 'package:d2ypresence/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 import '../controllers/qr_scan_controller.dart';
 

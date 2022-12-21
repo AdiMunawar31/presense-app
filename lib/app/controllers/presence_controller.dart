@@ -64,7 +64,7 @@ class PresenceController extends GetxController {
   ) async {
     CustomAlertDialog.showPresenceAlert(
       title: "Apakah anda ingin absen masuk?",
-      message: "Anda perlu mengkonfirmasi sebelum Anda melakukan kehadiran sekarang",
+      message: "Anda perlu mengkonfirmasi QR Code sebelum Anda melakukan kehadiran sekarang",
       onCancel: () => Get.back(),
       onConfirm: () async {
         Map<String, dynamic> data = {
@@ -127,7 +127,7 @@ class PresenceController extends GetxController {
   ) async {
     CustomAlertDialog.showPresenceAlert(
       title: "Apakah anda ingin absen keluar?",
-      message: "Anda perlu mengkonfirmasi sebelum Anda melakukan kehadiran sekarang",
+      message: "Anda perlu mengkonfirmasi QR Code sebelum Anda melakukan kehadiran sekarang",
       onCancel: () => Get.back(),
       onConfirm: () async {
         Map<String, dynamic> data = {
@@ -180,7 +180,7 @@ class PresenceController extends GetxController {
         Map<String, dynamic>? dataPresenceToday = todayDoc.data();
 
         // ? : sudah absen masuk
-        if (dataPresenceToday?["keluar"] != null) {
+        if (dataPresenceToday?["out"] != null) {
           // ? : sudah absen masuk dan keluar
           CustomToast.successToast("Berhasil", "Anda sudah absen masuk dan keluar");
         } else {

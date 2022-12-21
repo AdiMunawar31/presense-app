@@ -24,6 +24,8 @@ import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/qr_scan/bindings/qr_scan_binding.dart';
 import '../modules/qr_scan/views/qr_scan_view.dart';
+import '../modules/success/bindings/success_binding.dart';
+import '../modules/success/views/success_view.dart';
 
 part 'app_routes.dart';
 
@@ -94,6 +96,11 @@ class AppPages {
       name: _Paths.QR_SCAN,
       page: () => QrScanView(),
       binding: QrScanBinding(),
+    ),
+    GetPage(
+      name: _Paths.SUCCESS,
+      page: () => const SuccessView(),
+      binding: SuccessBinding(),
     ),
   ];
 }
