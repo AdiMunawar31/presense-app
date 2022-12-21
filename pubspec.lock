@@ -22,13 +22,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.9.0"
-  barcode_scan:
-    dependency: "direct main"
-    description:
-      name: barcode_scan
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -181,6 +174,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_barcode_scanner:
+    dependency: "direct main"
+    description:
+      name: flutter_barcode_scanner
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -415,13 +415,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.2"
-  qrscan:
+  qr_code_scanner:
     dependency: "direct main"
     description:
-      name: qrscan
+      name: qr_code_scanner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.3"
+    version: "1.0.1"
   sky_engine:
     dependency: transitive
     description: flutter

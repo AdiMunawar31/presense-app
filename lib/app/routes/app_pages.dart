@@ -22,6 +22,8 @@ import '../modules/new_password/bindings/new_password_binding.dart';
 import '../modules/new_password/views/new_password_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
+import '../modules/qr_scan/bindings/qr_scan_binding.dart';
+import '../modules/qr_scan/views/qr_scan_view.dart';
 
 part 'app_routes.dart';
 
@@ -87,6 +89,11 @@ class AppPages {
       name: _Paths.ALL_PRESENCE,
       page: () => const AllPresenceView(),
       binding: AllPresenceBinding(),
+    ),
+    GetPage(
+      name: _Paths.QR_SCAN,
+      page: () => const QrScanView(),
+      binding: QrScanBinding(),
     ),
   ];
 }

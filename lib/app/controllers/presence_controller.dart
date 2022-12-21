@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:d2ypresence/app/routes/app_pages.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -8,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:d2ypresence/app/widgets/dialog/custom_alert_dialog.dart';
 import 'package:d2ypresence/app/widgets/toast/custom_toast.dart';
 import 'package:d2ypresence/company_data.dart';
-import 'package:qrscan/qrscan.dart' as scanner;
 
 class PresenceController extends GetxController {
   // RxBool isLoading = false.obs;
@@ -107,24 +107,25 @@ class PresenceController extends GetxController {
       message: "Anda perlu mengkonfirmasi sebelum Anda melakukan kehadiran sekarang",
       onCancel: () => Get.back(),
       onConfirm: () async {
-        await presenceCollection.doc(todayDocId).set(
-          {
-            "date": DateTime.now().toIso8601String(),
-            "in": {
-              "date": DateTime.now().toIso8601String(),
-              "hour": jam,
-              "day": hari,
-              "latitude": position.latitude,
-              "longitude": position.longitude,
-              "address": address,
-              "in_area": inArea,
-              "distance": distance.toStringAsFixed(2),
-              "keterangan": keterangan
-            }
-          },
-        );
-        Get.back();
-        CustomToast.successToast("Berhasil", "Berhasil absen masuk");
+        // await presenceCollection.doc(todayDocId).set(
+        //   {
+        //     "date": DateTime.now().toIso8601String(),
+        //     "in": {
+        //       "date": DateTime.now().toIso8601String(),
+        //       "hour": jam,
+        //       "day": hari,
+        //       "latitude": position.latitude,
+        //       "longitude": position.longitude,
+        //       "address": address,
+        //       "in_area": inArea,
+        //       "distance": distance.toStringAsFixed(2),
+        //       "keterangan": keterangan
+        //     }
+        //   },
+        // );
+        // Get.back();
+        // CustomToast.successToast("Berhasil", "Berhasil absen masuk");
+        Get.toNamed(Routes.QR_SCAN);
       },
     );
   }
